@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "2.0.20"
     `maven-publish`
 }
 
@@ -14,7 +12,7 @@ repositories {
 
 dependencies {
     arrayOf("asm", "asm-tree", "asm-commons").forEach {
-        implementation("org.ow2.asm:$it:9.2")
+        implementation("org.ow2.asm:$it:9.7.1")
     }
 
     testImplementation(kotlin("test"))
@@ -24,10 +22,6 @@ dependencies {
 
 kotlin {
     explicitApi()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
 }
 
 tasks.test {

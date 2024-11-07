@@ -8,7 +8,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.ClassWriter.COMPUTE_FRAMES
 import java.io.PrintStream
 
-class EphemeralClassLoader(val classBuffer: ByteArray) : ClassLoader() {
+class EphemeralClassLoader(private val classBuffer: ByteArray) : ClassLoader() {
     override fun findClass(name: String): Class<*> {
         return defineClass(name, classBuffer, 0, classBuffer.size)
     }
