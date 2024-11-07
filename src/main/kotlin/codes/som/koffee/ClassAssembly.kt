@@ -6,6 +6,7 @@ import codes.som.koffee.sugar.TypesAccess
 import codes.som.koffee.types.TypeLike
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
+import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
@@ -22,6 +23,9 @@ public class ClassAssembly internal constructor(public val node: ClassNode): Mod
         it.version = version
         it.superName = superName
         it.interfaces = interfaces.map { type -> coerceTypeStatic(type).internalName }
+
+        if (it.visibleAnnotations == null)
+            it.visibleAnnotations = mutableListOf()
     })
 
     /**
@@ -68,6 +72,14 @@ public class ClassAssembly internal constructor(public val node: ClassNode): Mod
      */
     public val self: Type
         get() = coerceType(node.name)
+
+    public fun annotation(type: TypeLike, vararg arguments: Pair<String, Any>): AnnotationNode {
+        val annotationNode = AnnotationNode(ASM9, coerceType(type).className)
+        for ((name, value) in arguments)
+            annotationNode.visit(name, value)
+        node.visibleAnnotations.add(annotationNode)
+        return annotationNode
+    }
 
     /**
      * Create a new field with the given information.
